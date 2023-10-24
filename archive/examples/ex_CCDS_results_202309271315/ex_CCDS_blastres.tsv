@@ -1,0 +1,70 @@
+# BLASTN 2.14.1+
+# Query: homSap_RSAD2_CCDS1656
+# Database: nr					
+# Fields: subject id, ?
+# 207 hits found
+gi|1519313597|ref|NM_080657.5| Homo sapiens radical S-adenosyl methionine domain containing 2 (RSAD2), transcript variant 1, mRNA
+gi|2462578429|ref|XM_054344503.1| PREDICTED: Homo sapiens radical S-adenosyl methionine domain containing 2 (RSAD2), transcript variant X1, mRNA
+gi|17974549|gb|AF442151.1|AF442151 Homo sapiens viperin mRNA, complete cds
+gi|164690472|dbj|AK312670.1| Homo sapiens cDNA, FLJ93063, highly similar to Homo sapiens viperin (cig5), mRNA
+gi|17389924|gb|BC017969.1| Homo sapiens radical S-adenosyl methionine domain containing 2, mRNA (cDNA clone MGC:24122 IMAGE:4669203), complete cds
+gi|525343096|ref|NM_001279645.1| Gorilla gorilla gorilla radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA >gi|397134544|gb|JQ437822.1| Gorilla gorilla radical S-adenosyl methionine domain-containing protein 2 (RSAD2) mRNA, complete cds
+gi|2612970|gb|AF026941.1|AF026941 Homo sapiens cig5 mRNA, partial sequence
+gi|2490766093|ref|XM_003812050.4| PREDICTED: Pan paniscus radical S-adenosyl methionine domain containing 2 (RSAD2), transcript variant X2, mRNA
+gi|2490766091|ref|XM_055108293.1| PREDICTED: Pan paniscus radical S-adenosyl methionine domain containing 2 (RSAD2), transcript variant X1, mRNA
+gi|525344635|ref|NM_001280531.1| Pan troglodytes radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA >gi|397134542|gb|JQ437821.1| Pan troglodytes radical S-adenosyl methionine domain-containing protein 2 (RSAD2) mRNA, complete cds
+gi|397134546|gb|JQ437823.1| Pongo pygmaeus radical S-adenosyl methionine domain-containing protein 2 (RSAD2) mRNA, complete cds
+gi|2463471625|ref|XM_054474401.1| PREDICTED: Pongo pygmaeus radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA
+gi|207079832|ref|NM_001135534.1| Pongo abelii radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA >gi|55727265|emb|CR858150.1| Pongo abelii mRNA; cDNA DKFZp468O0611 (from clone DKFZp468O0611)
+gi|1743178083|ref|XM_003276541.3| PREDICTED: Nomascus leucogenys radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA
+gi|397134550|gb|JQ437825.1| Hylobates agilis radical S-adenosyl methionine domain-containing protein 2 (RSAD2) mRNA, complete cds
+gi|2552996642|ref|XM_032172132.2| PREDICTED: Hylobates moloch radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA
+gi|1751249588|ref|XM_010359224.2| PREDICTED: Rhinopithecus roxellana radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA
+gi|1059194636|ref|XM_017896627.1| PREDICTED: Rhinopithecus bieti radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA
+gi|2295515926|gb|MW981598.1| Macaca mulatta radical S-adenosyl methionine domain containing 2 (RSAD2) mRNA, complete cds
+gi|1381434820|ref|XM_011749452.2| PREDICTED: Macaca nemestrina radical S-adenosyl methionine domain containing 2 (RSAD2), transcript variant X1, mRNA
+gi|2309356563|ref|XM_050754703.1| PREDICTED: Macaca thibetana thibetana radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA
+gi|2491614232|ref|XM_055252063.1| PREDICTED: Symphalangus syndactylus radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA
+gi|1411102863|ref|XM_025354794.1| PREDICTED: Theropithecus gelada radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA
+gi|2161834212|ref|XM_005576618.3| PREDICTED: Macaca fascicularis radical S-adenosyl methionine domain containing 2 (RSAD2), transcript variant X1, mRNA
+gi|526252819|ref|NM_001281312.1| Macaca mulatta radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA >gi|397134560|gb|JQ437830.1| Macaca mulatta radical S-adenosyl methionine domain-containing protein 2 (RSAD2) mRNA, complete cds
+gi|795077791|ref|XM_011993644.1| PREDICTED: Mandrillus leucophaeus radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA
+gi|525344875|ref|NM_001279531.1| Papio anubis radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA >gi|397134558|gb|JQ437829.1| Papio anubis radical S-adenosyl methionine domain-containing protein 2 (RSAD2) mRNA, complete cds
+gi|1825896357|ref|XM_033176640.1| PREDICTED: Trachypithecus francoisi radical S-adenosyl methionine domain containing 2 (RSAD2), transcript variant X1, mRNA
+gi|397134564|gb|JQ437832.1| Colobus guereza kikuyuensis radical S-adenosyl methionine domain-containing protein 2 (RSAD2) mRNA, complete cds
+gi|397134562|gb|JQ437831.1| Trachypithecus francoisi radical S-adenosyl methionine domain-containing protein 2 (RSAD2) mRNA, complete cds
+gi|397134556|gb|JQ437828.1| Erythrocebus patas radical S-adenosyl methionine domain-containing protein 2 (RSAD2) mRNA, complete cds
+gi|397134552|gb|JQ437826.1| Chlorocebus aethiops radical S-adenosyl methionine domain-containing protein 2 (RSAD2) mRNA, complete cds
+gi|397134548|gb|JQ437824.1| Symphalangus syndactylus radical S-adenosyl methionine domain-containing protein 2 (RSAD2) mRNA, complete cds
+gi|1938869884|ref|XM_007971580.2| PREDICTED: Chlorocebus sabaeus radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA
+gi|795254281|ref|XM_012063960.1| PREDICTED: Cercocebus atys radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA
+gi|795305636|ref|XM_011960946.1| PREDICTED: Colobus angolensis palliatus radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA
+gi|397134554|gb|JQ437827.1| Cercopithecus nictitans radical S-adenosyl methionine domain-containing protein 2 (RSAD2) mRNA, complete cds
+gi|1788679147|ref|XM_023198869.3| PREDICTED: Piliocolobus tephrosceles radical S-adenosyl methionine domain containing 2 (RSAD2), transcript variant X1, mRNA
+gi|397134566|gb|JQ437833.1| Lagothrix lagotricha radical S-adenosyl methionine domain-containing protein 2 (RSAD2) mRNA, complete cds
+gi|397134568|gb|JQ437834.1| Ateles geoffroyi radical S-adenosyl methionine domain-containing protein 2 (RSAD2) mRNA, complete cds
+gi|1212393263|ref|XM_012441946.2| PREDICTED: Aotus nancymaae radical S-adenosyl methionine domain containing 2 (RSAD2), transcript variant X1, mRNA
+gi|1984025101|ref|XM_003927233.3| PREDICTED: Saimiri boliviensis boliviensis radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA
+gi|397134572|gb|JQ437836.1| Aotus trivirgatus radical S-adenosyl methionine domain-containing protein 2 (RSAD2) mRNA, complete cds
+gi|1933953542|ref|XM_017541999.2| PREDICTED: Cebus imitator radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA
+gi|397134574|gb|JQ437837.1| Plecturocebus moloch radical S-adenosyl methionine domain-containing protein 2 (RSAD2) mRNA, complete cds
+gi|1804389558|ref|XR_004273743.1| PREDICTED: Sapajus apella radical S-adenosyl methionine domain containing 2 (RSAD2), transcript variant X2, misc_RNA
+gi|1804389556|ref|XM_032294225.1| PREDICTED: Sapajus apella radical S-adenosyl methionine domain containing 2 (RSAD2), transcript variant X1, mRNA
+gi|2461757442|ref|XM_002758049.5| PREDICTED: Callithrix jacchus radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA
+gi|397134570|gb|JQ437835.1| Cebuella pygmaea radical S-adenosyl methionine domain-containing protein 2 (RSAD2) mRNA, complete cds
+gi|1825896359|ref|XM_033176641.1| PREDICTED: Trachypithecus francoisi radical S-adenosyl methionine domain containing 2 (RSAD2), transcript variant X2, mRNA
+gi|1297603883|ref|XM_023198876.1| PREDICTED: Piliocolobus tephrosceles radical S-adenosyl methionine domain containing 2 (RSAD2), transcript variant X2, mRNA
+gi|826281277|ref|XM_012639946.1| PREDICTED: Propithecus coquereli radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA
+gi|2286439524|ref|NM_001410702.1| Homo sapiens radical S-adenosyl methionine domain containing 2 (RSAD2), transcript variant 2, mRNA
+gi|2468595922|ref|XM_016942853.3| PREDICTED: Pan troglodytes radical S-adenosyl methionine domain containing 2 (RSAD2), transcript variant X1, mRNA
+gi|194390251|dbj|AK300085.1| Homo sapiens cDNA FLJ59752 complete cds, highly similar to Homo sapiens radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA
+gi|1214021233|ref|XM_008051837.2| PREDICTED: Carlito syrichta radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA
+gi|2441763629|ref|XM_053589046.1| PREDICTED: Nycticebus coucang radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA
+gi|795361816|ref|XM_011749454.1| PREDICTED: Macaca nemestrina radical S-adenosyl methionine domain containing 2 (RSAD2), transcript variant X2, mRNA
+gi|795361810|ref|XM_011749453.1| PREDICTED: Macaca nemestrina radical S-adenosyl methionine domain containing 2 (RSAD2), transcript variant X3, mRNA
+gi|2161834214|ref|XM_045369851.1| PREDICTED: Macaca fascicularis radical S-adenosyl methionine domain containing 2 (RSAD2), transcript variant X2, mRNA
+gi|1327824896|ref|XM_003803558.3| PREDICTED: Otolemur garnettii radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA
+gi|1149883941|ref|XM_012763351.2| PREDICTED: Microcebus murinus radical S-adenosyl methionine domain containing 2 (RSAD2), mRNA
+gi|1297603887|ref|XM_023198882.1| PREDICTED: Piliocolobus tephrosceles radical S-adenosyl methionine domain containing 2 (RSAD2), transcript variant X3, mRNA
+gi|817343802|ref|XM_012441947.1| PREDICTED: Aotus nancymaae radical S-adenosyl methionine domain containing 2 (RSAD2), transcript variant X2, mRNA
+gi|1804389559|ref|XM_032294226.1| PREDICTED: Sapajus apella radical S-adenosyl methionine domain containing 2 (RSAD2), transcript variant X3, mRNA
