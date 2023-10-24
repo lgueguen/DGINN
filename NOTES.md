@@ -52,7 +52,7 @@ mamba env export > environment.yml
 
 # Bio++ packages
 
-The Bio++ packages in bioconda date back to the latest official release in 2018. To be able to used the more recent (if not yet unreleased) v3 version, it is needed to build conda packages locally.
+The [Bio++](https://github.com/BioPP) packages in bioconda date back to the latest official release in 2018. To be able to used the more recent (if not yet unreleased) v3 version, it is needed to build conda packages locally.
 
 Instructions follow those described in the bioconda documentation:
 
