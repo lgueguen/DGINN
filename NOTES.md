@@ -72,7 +72,7 @@ cd packages
 mamba activate dginn_build
 # build all biopp packages
 bioconda-utils build --docker --mulled-test recipes/
-# build only biopp package
+# build only biopp-core package
 bioconda-utils build --docker --mulled-test --packages biopp-core recipes/
 mamba deactivate
 ```
