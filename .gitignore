@@ -9,3 +9,4 @@ results*/
 example_snakemake/results*
 .python-version
 .cache/
+.vscode/
