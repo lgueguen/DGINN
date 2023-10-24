@@ -52,7 +52,7 @@ mamba env export > environment.yml
 
 # Bio++ packages
 
-The [Bio++](https://github.com/BioPP) packages in bioconda date back to the latest official release in 2018. To be able to used the more recent (if not yet unreleased) v3 version, it is needed to build conda packages locally.
+The [Bio++](https://github.com/BioPP) packages in bioconda date back to the latest official release in 2018. To be able to used the more recent (if not yet unreleased) v3 version, you need to build conda packages locally and install them manually.
 
 Instructions follow those described in the bioconda documentation:
 
@@ -87,5 +87,6 @@ mamba deactivate
 To install them in your own local environment, and assuming that your `dginn` and `dginn_build` environements are in the same folder, you can use something like:
 ```shell
 mamba activate dginn
+mamba uninstall bpp-core bpp-phyl bpp-seq bpp-popgen
 mamba install -c ${CONDA_PREFIX}/../dginn_build/conda-bld bppsuite
 ```
