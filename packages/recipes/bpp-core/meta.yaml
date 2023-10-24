@@ -1,0 +1,30 @@
+{% set commit = 'fecd6f1c1896b81244d3fd396680c1a48b957eda' %}
+{% set sha256 = 'fbc141cf9ff8448d112e3aa0c41b80b77345d7abe13cadad3e0ff63c3251ef93' %}
+
+package:
+  name: bpp-core3
+  version: {{ commit }}
+
+build:
+  number: 6
+
+source:
+  url: https://github.com/BioPP/bpp-core/archive/{{ commit }}.tar.gz
+  sha256: {{ sha256 }}
+
+requirements:
+  build:
+    - make
+    - {{ compiler('cxx') }}
+    - cmake
+
+test:
+  commands:
+    - test -f ${PREFIX}/lib/libbpp-core3.so  # [linux]
+    - test -f ${PREFIX}/lib/libbpp-core3.dylib  # [osx]
+
+about:
+  home: https://github.com/BioPP/bpp-core
+  license: CeCILL
+  license_file: COPYING.txt
+  summary: "Bio++ is a set of C++ libraries for Bioinformatics."

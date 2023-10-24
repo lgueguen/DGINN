@@ -1,0 +1,9 @@
+--- CMakeLists.txt
++++ CMakeLists.txt
+@@ -11,5 +11,5 @@
+ 
+ # Compile options
+-SET (CMAKE_CXX_FLAGS "-std=c++14 -Wall -Weffc++ -Wshadow -Wconversion")
++SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Weffc++ -Wshadow -Wconversion")
+ 
+ IF(NOT CMAKE_BUILD_TYPE)

@@ -1,0 +1,43 @@
+{% set commit = 'd1da41271d359e09c6e78219be65ea4bc14092a8' %}
+{% set sha256 = '93fdd362102355b25e705d43da93c4db88376faa242e01f9fe717856ab2ea311' %}
+
+package:
+  name: bppsuite
+  version: {{ commit }}
+
+build:
+  number: 6
+
+source:
+  url: https://github.com/BioPP/bppsuite/archive/{{ commit }}.tar.gz
+  sha256: {{ sha256 }}
+  patches:
+    - 0001-do-not-override-CXXFLAGS.patch
+
+
+requirements:
+  build:
+    - make
+    - {{ compiler('cxx') }}
+    - cmake
+  host:
+    - bpp-core3
+    - bpp-seq3
+    - bpp-phyl3
+    - bpp-popgen3
+  run:
+    - bpp-core3
+    - bpp-seq3
+    - bpp-phyl3
+    - bpp-popgen3
+
+
+test:
+  commands:
+    - test -f ${PREFIX}/bin/bppml # [linux]
+
+about:
+  home: https://github.com/BioPP/bpp-core
+  license: CeCILL
+  license_file: COPYING.txt
+  summary: "Bio++ is a set of C++ libraries for Bioinformatics."

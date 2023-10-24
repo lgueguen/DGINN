@@ -1,0 +1,38 @@
+{% set commit = '4ed20e21211b8fa19226c9151b9a6d1f014ed201' %}
+{% set sha256 = 'a36a1fbf8d0c4c9c798782fc725746011a63b75d2fe496073d9d766c8ec6db69' %}
+
+package:
+  name: bpp-popgen3
+  version: {{ commit }}
+
+build:
+  number: 4
+
+source:
+  url: https://github.com/BioPP/bpp-popgen/archive/{{ commit }}.tar.gz
+  sha256: {{ sha256 }}
+  patches:
+    - 0001-do-not-override-CXXFLAGS.patch
+
+requirements:
+  build:
+    - make
+    - {{ compiler('cxx') }}
+    - cmake
+  host:
+    - bpp-phyl3
+    - bpp-seq3
+  run:
+    - bpp-phyl3
+    - bpp-seq3
+
+test:
+  commands:
+    - test -f ${PREFIX}/lib/libbpp-popgen3.so  # [linux]
+    - test -f ${PREFIX}/lib/libbpp-popgen3.dylib  # [osx]
+
+about:
+  home: https://github.com/BioPP/bpp-popgen
+  license: CeCILL
+  license_file: COPYING.txt
+  summary: "Bio++ is a set of C++ libraries for Bioinformatics."

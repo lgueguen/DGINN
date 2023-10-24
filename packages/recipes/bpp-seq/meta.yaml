@@ -1,0 +1,36 @@
+{% set commit = 'ccc7c9d58500a4faea984fb11ddc5234da6b001e' %}
+{% set sha256 = '3135a7506611f227c8a16ddc63a1c998b85fced865f0aa82a557beb053d29732' %}
+
+package:
+  name: bpp-seq3
+  version: {{ commit }}
+
+build:
+  number: 4
+
+source:
+  url: https://github.com/BioPP/bpp-seq/archive/{{ commit }}.tar.gz
+  sha256: {{ sha256 }}
+  patches:
+    - 0001-do-not-override-CXXFLAGS.patch
+
+requirements:
+  build:
+    - make
+    - {{ compiler('cxx') }}
+    - cmake
+  host:
+    - bpp-core3
+  run:
+    - bpp-core3
+
+test:
+  commands:
+    - test -f ${PREFIX}/lib/libbpp-seq3.so  # [linux]
+    - test -f ${PREFIX}/lib/libbpp-seq3.dylib  # [osx]
+
+about:
+  home: https://github.com/BioPP/bpp-seq
+  license: CeCILL
+  license_file: COPYING.txt
+  summary: "Bio++ is a set of C++ libraries for Bioinformatics."
