@@ -3,7 +3,7 @@ MAINTAINER Lea Picard lea.picard@gmail.com
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update && apt-get install -y apt-utils  locales default-jdk default-jre  build-essential git emboss doxygen  pkg-config  automake openmpi-bin  libopenmpi-dev  libeigen3-dev wget openssl locales
+RUN apt-get update && apt-get install -y apt-utils  locales default-jdk default-jre  build-essential git emboss doxygen  pkg-config  automake openmpi-bin  libopenmpi-dev  libeigen3-dev wget openssl locales valgrind
 
 RUN TZ="Europe/Paris" apt-get -y install tzdata
 
@@ -41,7 +41,7 @@ RUN apt-get clean
 FROM base as prank
 WORKDIR /opt
 
-RUN git clone https://github.com/ariloytynoja/prank-msa.git && cd prank-msa/src && make
+RUN apt-get install -y prank
 
 
 #################
@@ -78,6 +78,19 @@ FROM base as treerecs
 WORKDIR /opt
 
 RUN git  clone  --recurse-submodules https://gitlab.inria.fr/Phylophile/Treerecs && cd Treerecs && cmake -DCMAKE_BUILD_TYPE=MinSizeRel . && make && make install
+
+################################################
+##### Recombination
+
+FROM base as phyml_multi
+WORKDIR /opt
+
+RUN apt-get -y install python3-dev libpython3-all-dev 
+
+RUN git clone https://github.com/lgueguen/phyml_multi.git && cd phyml_multi && make && cd ..
+
+RUN git clone https://github.com/lgueguen/SARMENT.git && cd SARMENT && make && cd ..
+
 
 #################################################
 ### Selection
@@ -167,7 +180,7 @@ ENV PATH /opt/bin:/usr/bin/$PATH
 #################################
 ## ALIGNERS
 
-COPY --from=prank /opt/prank-msa/src/prank /opt/bin/prank
+COPY --from=prank /usr/bin/prank /opt/bin/prank
 
 COPY --from=mafft /usr/bin/mafft /opt/bin/mafft
 COPY --from=mafft /usr/bin/mafft-homologs /opt/bin/mafft-homologs
@@ -191,6 +204,14 @@ COPY --from=phyml /usr/lib/phyml/bin /usr/lib/phyml/bin
 COPY --from=treerecs  /opt/Treerecs /opt/treerecs
 ENV PATH /opt/treerecs/bin:$PATH
 
+###############################
+## Recombination
+
+COPY --from=phyml_multi /opt/phyml_multi/phyml_multi /usr/bin/phyml_multi
+COPY --from=phyml_multi /opt/SARMENT /usr/bin/SARMENT
+COPY --from=phyml_multi /opt/phyml_multi/*.py /usr/bin/SARMENT/
+
+ENV PYTHONPATH $PYTHONPATH:/usr/bin/SARMENT
 
 ######################################
 ### Selection
@@ -213,15 +234,16 @@ ENV LD_LIBRARY_PATH /opt/bpp/lib:$LD_LIBRARY_PATH
 
 ### Set Up rights for snakemake
 
-RUN mkdir /opt/DGINN/.snakemake
+RUN mkdir -p /opt/DGINN/.snakemake
 RUN chmod 777 /opt/DGINN/.snakemake
+
 ENV XDG_CACHE_HOME /opt/DGINN/.snakemake
 
 ###
 
 WORKDIR /opt/home
 
-ENTRYPOINT ["/usr/bin/snakemake","-c1","--snakefile","/opt/DGINN/Snakefile"]
+ENTRYPOINT ["/usr/bin/snakemake","-c4","--snakefile","/opt/DGINN/Snakefile"]
 
 
 CMD ["--help"]

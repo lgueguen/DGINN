@@ -76,7 +76,7 @@ phymlOpt:
 sptree: example_snakemake/ex_spTree.tree
 
 # Option for the identification of duplication events (default: False)
-duplication: False
+duplication: True
 
 
 # Option for Long Branch separation (default: cutoff(50))
@@ -98,7 +98,7 @@ recombination: True
 ### POSITIVE SELECTION
 
 # Option for the detection of positive selection (default: False)
-positiveSelection: True
+positiveSelection: False
 
 # P-value for Hyphy methods (BUSTED/MEME) (Pond *et al.*, 2005) (default: 0.1)
 hyphySeuil: 

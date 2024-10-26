@@ -39,7 +39,7 @@ if __name__ == "__main__":
 
     ## lQuer is the list of new queryNames
     ## lAln is the list of new alignments
-    [lQuer, lAln] = AnalysisFunc.parseGard(gardRes, parameters)
+    [lQuer, lAln] = AnalysisFunc.parseBreakpoints(gardRes, parameters)
 
     ## register resulting [queryName, alignment]s in output
     f = open(config["output"], "w")

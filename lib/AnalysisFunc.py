@@ -541,7 +541,7 @@ def procGARD(gardRes, aln):
     return outGardProc
 
 
-def parseGard(kh, parameters):
+def parseBreakpoints(kh, parameters):
     """
     Function returning the cut fragments following GARD analysis and identification of significant breakpoints.
 
