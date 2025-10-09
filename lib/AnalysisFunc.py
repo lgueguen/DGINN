@@ -176,8 +176,7 @@ def runMacse(ORFs, parameters):
 
     fout = open(outFile+".out","w")
 
-    ## 2025/10/09 added --frameshift_mode 1 to replace ! by - to denote frameshift in order not to cause problems downstream when dealing with codeml
-    subprocess.run("java -jar /opt/bin/macse.jar -prog refineAlignment -align {:s} -out_NT {:s}.best.fas --frameshift_mode 1".format(ORFs, outFile),shell=True, stdout=fout)
+    subprocess.run("java -jar /opt/bin/macse.jar -prog refineAlignment -align {:s} -out_NT {:s}.best.fas".format(ORFs, outFile),shell=True, stdout=fout)
 
     fout.close()
     
