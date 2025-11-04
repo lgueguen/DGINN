@@ -94,6 +94,7 @@ RUN wget https://github.com/iqtree/iqtree2/releases/download/v2.3.6/iqtree-2.3.6
 FROM base as treerecs
 WORKDIR /opt
 
+RUN apt-get install -y flex bison
 RUN git  clone  --recurse-submodules https://gitlab.inria.fr/Phylophile/Treerecs && cd Treerecs && cmake -DCMAKE_BUILD_TYPE=MinSizeRel . && make && make install
 
 #################################################
@@ -150,7 +151,6 @@ RUN cd bpp  && git clone https://github.com/BioPP/bppsuite && cd bppsuite && cma
 FROM base as paml
 
 RUN apt-get install -y paml
-
 
 #################
 ### Install HYPHY
