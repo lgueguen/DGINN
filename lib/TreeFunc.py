@@ -18,10 +18,11 @@ def splitTree(parameters, step="duplication"):
   """
   Split the gene tree in several sub-trees, following several methods.
 
-  1- Cutlongbranches
-  2- Reconciliation
-
-  @output The dictionnary {new query, new subalignment file}
+  1- Reconciliation (with re-rooting)
+  2- Cutlongbranches
+  3- Reduce polymorphism
+  
+  @output The dictionnary {new query, new subalignment file}. 
   """
 
   nbspecies=parameters["nbspecies"]
@@ -29,38 +30,50 @@ def splitTree(parameters, step="duplication"):
   aln = parameters["input"].split()[0].strip()
   tree = parameters["input"].split()[1].strip()
   outdir = parameters["outdir"]
+  query = parameters["queryName"]
   
   logger = logging.getLogger(".".join(["main", step]))
 
-  dSubAln = cutLongBranches(parameters, aln, tree, nbspecies, logger)
-
+  ### Reconciliation
   dqaln={}
-
   if parameters["sptree"]!="":
     sptree = parameters["sptree"]
     logger.info("Species tree " + sptree)
-    for query, aln in dSubAln.items():
-      logger.info("Running Treerecs for " + query)
-      recTree = runTreerecs(query, aln, tree, sptree, outdir, logger)
-      if recTree:
-        dqaln.update(treeParsing(query, aln, recTree, nbspecies, outdir, logger))
-      else:
-        dqaln[query]=aln
-          
+    recTree = runTreerecs(query, aln, tree, sptree, outdir, logger)
+    if recTree:
+      dqaln.update(treeParsing(query, aln, recTree, nbspecies, outdir, logger))
+    else:
+      dqaln[query]=[aln, tree]
   else:
-    dqaln=dSubAln
+    dqaln[query]=[aln, tree]
+
+  ### cutLongBranches
+
+  dSubAln = {}
+  
+  for query, [aln, tree] in dqaln.items():
+    dSubAln.update(cutLongBranches(query, aln, tree, parameters, nbspecies, outdir, logger))
+
+  ### merge polymorphism
+  dqaln = {}
+  for query, [aln, tree] in dSubAln.items():
+    k, aln = AnalysisFunc.mergePolymorphism(query, aln, tree, outdir, logger)
+    dqaln[k] = aln
 
   return(dqaln)
 
 
-def cutLongBranches(parameters, aln, tree, nbSp, logger):
+def cutLongBranches(queryName, aln, tree, parameters, nbSp, outdir, logger):
     """
     Check for overly long branches in a tree and separate both tree and corresponding alignment if found.
 
+    @param1 queryName: query
     @param1 aln: Fasta alignment
     @param2 tree: Tree corresponding to the alignment
+    @param3 parameters: used parameters for cutLongBranches
+    @param4 outdir: output directory
     @param3 logger: Logging object
-    @return dSubAln: Updated dictionary of queries and their corresponding alignment file
+    @return Dictionary of {queries,[alignment file, tree file]}
     """
 
     LBOpt = parameters["LBopt"]
@@ -71,9 +84,6 @@ def cutLongBranches(parameters, aln, tree, nbSp, logger):
     # longDist = 500
     dSubAln={}
 
-    queryName=parameters["queryName"]
-    outdir=parameters["outdir"]
-    
     if "cutoff" in LBOpt:
         if "(" in LBOpt:
             factor = float(LBOpt.split("(")[1].replace(")", ""))
@@ -110,9 +120,16 @@ def cutLongBranches(parameters, aln, tree, nbSp, logger):
         dID2Seq = {gene.id: gene.seq for gene in seqs}
 
         for node in matches:
-            gp = [node] + node.get_children()
-            lNewGp = node.get_leaf_names()
+            up = node.up
+            gp = node.detach()
+            lNewGp = gp.get_leaf_names()
 
+            # iteratively remove nodes with on child
+            while up and len(up.children)==1:
+              upup = up.up
+              up.delete()
+              up = upup
+              
             dNewAln = {gene: dID2Seq[gene] for gene in lNewGp if gene in dID2Seq}
 
             for k in dNewAln:
@@ -122,11 +139,13 @@ def cutLongBranches(parameters, aln, tree, nbSp, logger):
 
             if len(dNewAln) > nbSp - 1:
               newQuery = queryName +  "_part" + str(matches.index(node) + 1)
-              alnf = outdir + "/" + newQuery + ".fasta"
+              alnf = outdir + "/" + newQuery + "_orf.fasta"
               with open(alnf,"w") as fasta:
                 fasta.write(FastaResFunc.dict2fasta(dNewAln))
                 fasta.close()
-              dSubAln[newQuery] = alnf
+              outTree = outdir + "/" + newQuery + "_orf.dnd"
+              gp.write(outfile = outTree)
+              dSubAln[newQuery] = [alnf, outTree]
             elif len(dNewAln)!=0 or len(dID2Seq)==0:
                 logger.info(
                     "Sequences {} will not be considered for downstream analyses as they do not compose a large enough group.".format(
@@ -135,14 +154,19 @@ def cutLongBranches(parameters, aln, tree, nbSp, logger):
                 )
 
         newQuery = queryName + "_part" + str(len(matches) + 1) 
-        alnLeft = os.path.join(outdir,newQuery + ".fasta")
+        alnLeft = os.path.join(outdir,newQuery + "_orf.fasta")
+        treeLeft = os.path.join(outdir,newQuery + "_orf.dnd")
 
         if len(dID2Seq) > nbSp - 1:
             with open(alnLeft, "w") as fasta:
                 fasta.write(FastaResFunc.dict2fasta(dID2Seq))
                 logger.info("\tNew alignment:%s" % {alnLeft})
                 fasta.close()
-            dSubAln[newQuery]=alnLeft
+                
+            loadTree.write(outfile=treeLeft)
+            dSubAln[newQuery]=[alnLeft,treeLeft]
+
+
         elif len(dID2Seq)!=0 or len(dID2Seq)==0:
             logger.info(
                 "Sequences in {} will not be considered for downstream analyses as they do not compose a large enough group.".format(
@@ -152,7 +176,7 @@ def cutLongBranches(parameters, aln, tree, nbSp, logger):
 
     else:
       logger.info("No long branches found.")
-      dSubAln[queryName]=aln
+      dSubAln[queryName]=[aln, tree]
       
     return dSubAln
 
@@ -382,7 +406,7 @@ def treeParsing(query, ORF, recTree, nbSp, outdir, logger):
     @param5 outdir: Output directory
     @param6 logger: Logging object
     
-    @return dquery: dictionnary (new queries, new files)
+    @return dquery: dictionnary {new queries, [new alignment, subtree]}
     """
 
     with open(recTree, "r") as tree:
@@ -449,14 +473,17 @@ def treeParsing(query, ORF, recTree, nbSp, outdir, logger):
                         nDuplSign += 1
                         newQuery = query + "_D%d_gp%d"%(nodeNb,nGp)
                         outFile = os.path.join(outdir, newQuery + "_orf.fasta")
-                        dOut[newQuery]=outFile
 
                         # create new file of orthologous sequences
                         with open(outFile, "w") as fasta:
                             fasta.write(FastaResFunc.dict2fasta(dOrtho2Seq))
                             fasta.close()
-                        # remove the node from the tree
+                        # remove the node from the tree and write it
                         removed = gp.detach()
+                        outTree = os.path.join(outdir, newQuery + "_orf.dnd")
+                        removed.write(outfile=outTree)
+                        dOut[newQuery]=[outFile,outTree]
+                        
                     logger.info("Extracting clade of {:d} species under node {:d}".format(len(spGp),nodeNb))
 
                     dDupl2Seq["{:d}-{:d}".format(nodeNb, nGp)] = orthos
@@ -474,11 +501,13 @@ def treeParsing(query, ORF, recTree, nbSp, outdir, logger):
         newQuery = query + "_Drem"
         outFile = os.path.join(outdir, newQuery + "_orf.fasta")
         nDuplSign += 1
-
         with open(outFile, "w") as fasta:
           fasta.write(FastaResFunc.dict2fasta(dRemain))
           fasta.close()
-        dOut[newQuery]=outFile
+        outTree = os.path.join(outdir, newQuery + "_orf.dnd")
+        testTree.write(outfile=outTree)
+        
+        dOut[newQuery]=[outFile, outTree]
         logger.info("Extracting remaining sequence of {:d} species".format(len(spGp)))
       else:
         logger.info(
@@ -489,11 +518,12 @@ def treeParsing(query, ORF, recTree, nbSp, outdir, logger):
                     
     # check that all files contain sequences, otherwise filter them out
     rmKey = []
-    for dupKey, dupFile in dOut.items():
+    for dupKey, [dupFile, dupTree] in dOut.items():
         lnseq = len([seq for seq in SeqIO.parse(open(dupFile), "fasta")])
         if lnseq < nbSp:
           rmKey.append(dupKey)
           os.remove(dupFile)
+          os.remove(dupTree)
 
     for key in rmKey:
       dOut.pop(key)
@@ -734,7 +764,7 @@ def runTreerecs(query, aln, pathGtree, pathSptree, outdir,logger):
         sptree.write(outfile=pathSptree2)
 
     ### filter out unmatched genes in species tree
-    val = "treerecs -g {:s} -s {:s} -o {:s} -f -t 0.8 -O NHX:svg".format(
+    val = "treerecs -r -g {:s} -s {:s} -o {:s} -f -t 0.8 -O NHX:svg".format(
         pathGtree, pathSptree2, outdir
     )
 

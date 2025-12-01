@@ -44,7 +44,6 @@ if __name__ == "__main__":
     if len(dqueryaln) >= 1:  # several sub alignments
         for query,faln in dqueryaln.items():
             fout.write(query + "\t"+ faln + "\n")
-
     else:
         fout.write(config["queryName"] + "\t"+ str(snakemake.input[0]) + "\n")
       
