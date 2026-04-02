@@ -118,7 +118,7 @@ rule all:
 ######################################################
 
 ## Function to check if a rule should be run: if file with outsuffix
-## does not exists, ask for insuffix file
+## does not exist, ask for insuffix file
           
 def check_exists(wildcards, outsuffix, insuffix):
     outfile = out_path(outsuffix,queryName=wildcards)[0]

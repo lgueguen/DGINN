@@ -5,6 +5,27 @@ import subprocess, re
 import Init
 from Logging import setup_logger
 
+def fasta2hyphy(aln, outAln):
+  fin = open(aln, "r")
+  dseq={}
+  l = fin.readline()
+  while l:
+    l2 = l.replace("!", "N")
+    if l2.startswith(">"):
+      name=l2[1:].strip()
+      dseq[name]=""
+    else:
+      dseq[name]+=l2.strip().upper()
+    l = fin.readline()
+      
+  fin.close()
+
+  fout = open(outAln, "w")
+  for k,v in dseq.items():
+    fout.write(">" + k+"\n")
+    fout.write(v+"\n")
+  fout.close()
+
 def pspAnalysis(params, rule):
     """
     procedure which execute functions for psp step
@@ -42,15 +63,20 @@ def pspAnalysis(params, rule):
 
     if rule in ["busted","meme"]:
       cladoFile =  PSPFunc.supBoot(params)
+
+      ## remove exclamation marks 
+      naln = os.path.join(outDir, "noexcl_"+os.path.split(aln)[-1])
+      fasta2hyphy(aln, naln)
+      
       if rule == "busted":
         try:		
-          GeneAnalysis.hyphyBusted(aln, cladoFile, outDir, logger)
+          GeneAnalysis.hyphyBusted(naln, cladoFile, outDir, logger)
         except Exception:
           logger.info("BUSTED encountered an unexpected error, skipping.")
 
       if rule=="meme":
         try:
-          BranchAnalysis.memeBranchSite(aln, cladoFile, outDir, logger)
+          BranchAnalysis.memeBranchSite(naln, cladoFile, outDir, logger)
         except Exception:
           logger.error("MEME encountered an unexpected error, skipping.")
 
