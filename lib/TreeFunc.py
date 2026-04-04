@@ -15,14 +15,15 @@ File which countain all functions about treerecs and tree treatement.
 """
 
 def splitTree(parameters, step="duplication"):
-  """
-  Split the gene tree in several sub-trees, following several methods.
+  """Split the gene tree in several sub-trees, following several methods.
 
   1- Reconciliation (with re-rooting)
   2- Cutlongbranches
   3- Reduce polymorphism
   
-  @output The dictionnary {new query, new subalignment file}. 
+  @output The dictionnary {new query, new subalignment file}. If
+  nothing new is built returns {query, alignment file}
+
   """
 
   nbspecies=parameters["nbspecies"]
@@ -44,9 +45,11 @@ def splitTree(parameters, step="duplication"):
       dqaln.update(treeParsing(query, aln, recTree, nbspecies, outdir, logger))
     else:
       dqaln[query]=[aln, tree]
-  else:
+
+  if len(dqaln)==0:
     dqaln[query]=[aln, tree]
 
+    
   ### cutLongBranches
 
   dSubAln = {}
@@ -57,6 +60,7 @@ def splitTree(parameters, step="duplication"):
   ### merge polymorphism
   dqaln = {}
   for query, [aln, tree] in dSubAln.items():
+    logger.info("merge "+ query)
     k, aln = AnalysisFunc.mergePolymorphism(query, aln, tree, outdir, logger)
     dqaln[k] = aln
 
