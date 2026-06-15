@@ -26,10 +26,10 @@ if __name__ == "__main__":
 
     # Run step
     parameters = Init.paramDef(config)
+    outDir = PosSelFunc.pspAnalysis(parameters,snakemake.rule)
 
-    outDir = PosSelFunc.pspAnalysis(parameters)
-
-    ## register resulting files in output
-    f = open(config["output"], "w")
-    f.write(outDir + "\t" + aln + "\n")
-    f.close()
+    if snakemake.rule==positive_selection_dup:
+      ## register resulting files in output
+      f = open(config["output"], "w")
+      f.write(outDir + "\t" + aln + "\n")
+      f.close()
