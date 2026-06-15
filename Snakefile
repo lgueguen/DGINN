@@ -300,9 +300,19 @@ rule duplication:
 #### Positive selection
 ######################################################
 
+rule paml:
+    input:
+       [rules.alignment.output, rules.tree.output]
+    output:
+        out_path(os.join.path("paml_site/C/M2/result.txt")
+    script:
+        "lib/StepPositiveSelection.py"
+          
+
 rule positive_selection_dup:
     input:
-        [rules.alignment.output, rules.tree.output],
+        if not config["param"]:
+             out_path(os.join.path("paml_site/C/M2/result.txt")
     output:
         out_path("_positive_selection_dup.txt"),
     log:
