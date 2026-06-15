@@ -21,15 +21,10 @@ if __name__ == "__main__":
     config["queryName"] = str(snakemake.wildcards).split(":", 1)[0]
     config["output"] = str(snakemake.output)
 
-    config["step"] = snakemake.rule
+    outDir = os.path.join(config["outdir"],config["queryName"] + "_positive_selection")
     aln = os.path.join(config["outdir"], config["queryName"] + "_align.fasta")
 
-    # Run step
-    parameters = Init.paramDef(config)
-    outDir = PosSelFunc.pspAnalysis(parameters,snakemake.rule)
-
-    if snakemake.rule==positive_selection_dup:
-      ## register resulting files in output
-      f = open(config["output"], "w")
-      f.write(outDir + "\t" + aln + "\n")
-      f.close()
+    ## register resulting files in output
+    f = open(config["output"], "w")
+    f.write(outDir + "\t" + aln + "\n")
+    f.close()

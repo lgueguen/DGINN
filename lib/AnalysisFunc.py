@@ -466,7 +466,133 @@ def isoformAln(aln, parameters):
         return aln
 
       
+def mergePolymorphism(query, aln, ftree, outdir, logger):
+    """Fuse sequences of a same species that are clustered together
+    in the tree. The differences in nucleotides are output as ambiguous ones. 
 
+    @param1 aln: Fasta alignment
+    @param2 tree: Tree corresponding to the alignment
+    @param3 logger: Logging object
+    @return Faste alignment file with clustered sequences, or similar as aln, if no cluster.
+
+    """
+
+    logger.info("Clustering polymorphism.")
+
+    tree = ete3.Tree(ftree)
+    dId2Seq = {}
+    laln=0
+    lsp=[]
+
+    def convert_nuc(snuc):
+      """ Function that returns the ambiguous base for set of read bases.
+      """
+
+      isLow = len([x for x in snuc if x.islower()])>0
+      
+      f = 0 # binary encoding for f
+      for l in "tgca":
+        f *= 2
+        f += (l in snuc or l.upper() in snuc)
+
+      if (f==  0): 
+        ret = "-"
+      elif (f==  1): 
+        ret = "A"
+      elif (f==  2): 
+        ret = "C"
+      elif (f==  4): 
+        ret = "G"
+      elif (f==  8): 
+        ret = "T"
+      elif (f==  3): 
+        ret = "M" # "Adenine or Cytosine"
+      elif (f==  5): 
+        ret = "R" # "Purine (Adenine or Guanine)"
+      elif (f==  9): 
+        ret = "W" # "Adenine or Thymine"
+      elif (f==  6): 
+        ret = "S" # "Cytosine or Guanine"
+      elif (f== 10): 
+        ret = "Y" # "Pyrimidine (Cytosine or Thymine)"
+      elif (f== 12): 
+        ret = "K" # "Guanine or Thymine"
+      elif (f==  7): 
+        ret = "V" # "Adenine or Cytosine or Guanine"
+      elif (f== 11): 
+        ret = "H" # "Adenine or Cytosine or Thymine"
+      elif (f== 13): 
+        ret = "D" # "Adenine or Guanine or Thymine"
+      elif (f== 14): 
+        ret = "B" # "Cytosine or Guanine or Thymine"
+      elif (f== 15): 
+        ret = "N" # "Unresolved base"
+
+      if isLow:
+        return ret.lower()
+      else:
+        return ret
+
+    for fasta in SeqIO.parse(open(aln), "fasta"):
+        post = len(fasta.id.split("_"))
+        if post > 2:  # regular format
+          spn = "_".join(fasta.id.split("_")[:2])
+          if not spn in lsp:
+            lsp.append(spn)
+        dId2Seq[fasta.id] = str(fasta.seq)
+        if laln==0:
+          laln = len(dId2Seq[fasta.id])
+    ## add species features to leaves
+    for leaf in tree.get_leaves():
+      leaf.add_features(species= "_".join(leaf.name.split("_")[:2]))
+
+    ### build new alignment
+    lAln={}
+    new = False
+    for sp in lsp:
+      for anc in tree.get_monophyletic(values=[sp], target_attr="species"):
+        if len(anc)==1:  ## A leaf
+          lAln[anc.name]=dId2Seq[anc.name]
+        else:
+          new = True
+          lseq = []
+          for i in range(laln):
+            snuc = set([dId2Seq[leaf.name][i] for leaf in anc.iter_leaves()])
+            lseq.append(convert_nuc(snuc))
+
+          # build consensus label
+          labc = [leaf.name for leaf in anc.iter_leaves()]
+
+          prefok = os.path.commonprefix(labc)
+          newname = prefok.strip("_:.")+"_poly"
+          if newname in lAln:
+            i = 1
+            while (newname + "_" + str(i)) in lAln:
+              i += 1
+            newname = newname + "_" + str(i)
+              
+          lAln[newname] = "".join(lseq)
+
+          logger.info(
+            "Clustered sequences"
+            + "_"
+            + ", ".join([x.name for x in anc.iter_leaves()])
+            + " into " + newname
+          )
+
+    ### output new alignment
+    if new:
+      newquery = query + "_poly"
+      newaln = os.path.join(outdir,newquery + "_orf.fasta")
+      with open(newaln, "w") as outf:
+        for k,v in lAln.items():
+          outf.write(">"+k+"\n")
+          outf.write(v+"\n")
+
+      return [newquery, newaln]
+    else:
+      return [query, aln]
+  
 #######=================================================================================================================
 ######PhyML=============================================================================================================
 
