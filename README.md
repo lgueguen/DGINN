@@ -255,6 +255,9 @@ sptree:
 # Option for the identification of duplication events (default: False)
 duplication:
 
+# Will polymorphism be merged? Default : true 
+Merge SNP: 
+
 ###############################################
 ##### CLEANING
 ###############################################
