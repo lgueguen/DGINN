@@ -1,6 +1,6 @@
 import shutil, sys, os
 from pathlib import Path
-          
+           
 # --- Path functions ---
 def out_path(file, queryName = "{queryName}"):
     return expand("{outdir}/{queryName}" + file, outdir=config["outdir"], queryName=queryName)
@@ -78,9 +78,12 @@ dstep={
 if step in dstep:
   for i in range(len(config["queryName"])):
     instep = dstep[step][0]
-    shutil.copyfile(config["infile"][i],out_path(instep,queryName=config["queryName"][i])[0])
-    config["infile"][i]=out_path(instep,queryName=config["queryName"][i])[0]
-
+    try: 
+    	 shutil.copyfile(config["infile"][i],out_path(instep,queryName=config["queryName"][i])[0])
+    	 config["infile"][i]=out_path(instep,queryName=config["queryName"][i])[0]
+    except FileNotFoundError as e:
+         print(e)
+         sys.exit()
 
 ## specifically for positive selection step, infiles should be couples (alignment, tree)
 
