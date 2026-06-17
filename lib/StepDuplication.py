@@ -34,7 +34,9 @@ if __name__ == "__main__":
     # Run step
 
     parameters["sptree"] = TreeFunc.treeCheck(parameters.get("sptree",""), align, config["queryName"], logger)
-        
+
+    parameters["SNP"] = config.get("Merge SNP",True)
+    
     dqueryaln = TreeFunc.splitTree(parameters)
 
     # output of the resulting sub-alignments querynames

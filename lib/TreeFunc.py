@@ -32,6 +32,7 @@ def splitTree(parameters, step="duplication"):
   tree = parameters["input"].split()[1].strip()
   outdir = parameters["outdir"]
   query = parameters["queryName"]
+  poly = parameters["SNP"]
   
   logger = logging.getLogger(".".join(["main", step]))
 
@@ -58,12 +59,15 @@ def splitTree(parameters, step="duplication"):
     dSubAln.update(cutLongBranches(query, aln, tree, parameters, nbspecies, outdir, logger))
 
   ### merge polymorphism
-  dqaln = {}
-  for query, [aln, tree] in dSubAln.items():
-    logger.info("merge "+ query)
-    k, aln = AnalysisFunc.mergePolymorphism(query, aln, tree, outdir, logger)
-    dqaln[k] = aln
-
+  if poly:
+    dqaln = {}
+    for query, [aln, tree] in dSubAln.items():
+      logger.info("merge "+ query)
+      k, aln = AnalysisFunc.mergePolymorphism(query, aln, tree, outdir, logger)
+      dqaln[k] = aln
+  else:
+    dqaln = {q:aln for q,[aln,tree] in dSubAln.items()}
+      
   return(dqaln)
 
 
@@ -83,6 +87,7 @@ def cutLongBranches(queryName, aln, tree, parameters, nbSp, outdir, logger):
     LBOpt = parameters["LBopt"]
     
     logger.info("Looking for long branches.")
+
     loadTree = ete3.Tree(tree)
     dist = [leaf.dist for leaf in loadTree.traverse()]
     # longDist = 500
@@ -149,7 +154,7 @@ def cutLongBranches(queryName, aln, tree, parameters, nbSp, outdir, logger):
                 fasta.close()
               outTree = outdir + "/" + newQuery + "_orf.dnd"
               gp.write(outfile = outTree)
-              dSubAln[newQuery] = [alnf, outTree]
+              dSubAln[newQuery] = [alnf,outTree]
             elif len(dNewAln)!=0 or len(dID2Seq)==0:
                 logger.info(
                     "Sequences {} will not be considered for downstream analyses as they do not compose a large enough group.".format(
@@ -180,7 +185,7 @@ def cutLongBranches(queryName, aln, tree, parameters, nbSp, outdir, logger):
 
     else:
       logger.info("No long branches found.")
-      dSubAln[queryName]=[aln, tree]
+      dSubAln[queryName]=[aln,tree]
       
     return dSubAln
 
@@ -444,6 +449,7 @@ def treeParsing(query, ORF, recTree, nbSp, outdir, logger):
         # do not consider dubious duplications (no intersection between the species on either side of the annotated duplication)
         lf = [set([leaf.S for leaf in gp]) for gp in node.get_children()]
         interok = (
+            len(lf) > 1 and 
             len(lf[0].intersection(lf[1])) != 0
             and len(lf[0]) > int(nbSp) / 2 - 1
             and len(lf[1]) > int(nbSp) / 2 - 1
@@ -451,7 +457,7 @@ def treeParsing(query, ORF, recTree, nbSp, outdir, logger):
 
         if not interok:
             dNb2Node.pop(nodeNb, None)
-
+            
         # otherwise check it out
         else:
             for gp in node.get_children():
@@ -482,8 +488,25 @@ def treeParsing(query, ORF, recTree, nbSp, outdir, logger):
                         with open(outFile, "w") as fasta:
                             fasta.write(FastaResFunc.dict2fasta(dOrtho2Seq))
                             fasta.close()
-                        # remove the node from the tree and write it
+                        # remove the node from the tree
+                        parent = gp.up
                         removed = gp.detach()
+
+                        # clean empty branches
+                        while parent is not None:
+                          grand_parent = parent.up
+                          if grand_parent is None:
+                            break
+                          if len(parent.children) == 0: # if no child, remove
+                            parent.detach()
+                          elif len(grand_parent.children) == 1: # if on false node, plug children to grand parent 
+                            for ch in parent.children:
+                              grand_parent.add_child(ch)
+                          else:  ## no need to go up again
+                            break
+                          parent = grand_parent
+
+                        ## write detached tree
                         outTree = os.path.join(outdir, newQuery + "_orf.dnd")
                         removed.write(outfile=outTree)
                         dOut[newQuery]=[outFile,outTree]
